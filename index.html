@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="industrial">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NULLTAPE — MΛLΛK</title>
+<meta name="description" content="NULLTAPE — samples, prévias e faixas de MΛLΛK." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="grain"></canvas>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand__mark" id="brandMark">NULLTAPE</span>
+    <span class="brand__tag" id="brandTag"></span>
+  </div>
+  <div class="topbar__actions">
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+      <span class="theme-toggle__dot"></span>
+      <span id="themeLabel">Industrial</span>
+    </button>
+    <button class="icon-btn" id="searchToggle" aria-label="Buscar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DASHBOARD VIEW ============ -->
+<main class="view" id="viewDashboard">
+  <div class="dash-header">
+    <p class="dash-header__eyebrow">Biblioteca</p>
+    <h1 id="dashTitle">Playlists</h1>
+    <p id="dashSub">Samples, prévias e loops soltos direto do estúdio.</p>
+  </div>
+  <div class="grid" id="playlistGrid"></div>
+</main>
+
+<!-- ============ PLAYLIST DETAIL VIEW ============ -->
+<main class="view" id="viewDetail" hidden>
+  <button class="back-btn" id="backBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    <span>Voltar</span>
+  </button>
+
+  <div class="detail">
+  <div class="detail__art-stage">
+    <div class="vinyl" id="vinylDisc" aria-hidden="true">
+      <div class="vinyl__disc">
+        <div class="vinyl__label"></div>
+      </div>
+    </div>
+    <div class="detail__art" id="detailArt"></div>
+  </div>
+
+    <div class="detail__head">
+      <p class="detail__eyebrow">Playlist</p>
+      <h1 class="detail__title" id="detailTitle"></h1>
+      <p class="detail__sub" id="detailSub"></p>
+
+      <div class="detail__actions">
+        <button class="btn-play-all" id="playAllBtn">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          Reproduzir tudo
+        </button>
+        <button class="btn-ghost" id="shuffleAllBtn" aria-label="Modo aleatório" title="Modo aleatório">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+        </button>
+        <button class="btn-ghost" id="renamePlaylistBtn" aria-label="Renomear playlist" title="Renomear playlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
+        </button>
+        <button class="btn-ghost btn-ghost--danger" id="deletePlaylistBtn" aria-label="Excluir playlist" title="Excluir playlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+        </button>
+      </div>
+
+      <button class="btn-add-tracks" id="addTracksBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Adicionar faixas
+      </button>
+
+      <div class="tracklist" id="trackList"></div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <span class="footer__brand" id="footerBrand">NULLTAPE</span>
+  <div class="footer__socials" id="footerSocials"></div>
+</footer>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<!-- ============ STICKY PLAYER ============ -->
+<div class="player" id="player">
+  <div class="player__now">
+    <div class="player__cover" id="playerCover"></div>
+    <div class="player__meta">
+      <div class="player__title" id="playerTitle">—</div>
+      <div class="player__artist" id="playerArtist">MΛLΛK</div>
+    </div>
+  </div>
+
+  <div class="player__center">
+    <div class="player__controls">
+      <button id="shuffleBtn" aria-label="Aleatório" title="Aleatório">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+      </button>
+      <button id="prevBtn" aria-label="Faixa anterior">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6L9 12l11 6z"/></svg>
+      </button>
+      <button id="playBtn" class="player__play" aria-label="Reproduzir">
+        <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button id="nextBtn" aria-label="Próxima faixa">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 6h-2v12h2zM4 6l11 6-11 6z"/></svg>
+      </button>
+      <button id="loopBtn" aria-label="Repetir" title="Repetir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      </button>
+    </div>
+    <div class="player__scrub">
+      <span class="player__time" id="timeCurrent">0:00</span>
+      <div class="wave" id="waveScrub"><canvas id="waveCanvas"></canvas></div>
+      <span class="player__time" id="timeTotal">0:00</span>
+    </div>
+  </div>
+
+  <div class="player__right">
+    <button class="icon-btn" id="downloadBtn" aria-label="Baixar sample" title="Baixar sample">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+    </button>
+    <button class="icon-btn" id="copyLinkBtn" aria-label="Copiar link" title="Copiar link da faixa">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.07 0l2.83-2.83a5 5 0 00-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 00-7.07 0L4.1 13.83a5 5 0 007.07 7.07L12.5 19.5"/></svg>
+    </button>
+    <div class="volume">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/></svg>
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.85" aria-label="Volume" />
+    </div>
+  </div>
+</div>
+
+<audio id="audio" preload="metadata"></audio>
+
+<!-- inputs de arquivo escondidos, acionados via clique na UI -->
+<input type="file" id="audioFileInput" accept="audio/*" multiple hidden />
+<input type="file" id="coverFileInput" accept="image/*" hidden />
+<input type="file" id="trackAttachInput" accept="audio/*" hidden />
+
+<script src="config.js"></script>
+<script src="db.js"></script>
+<script src="audio-analysis.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
